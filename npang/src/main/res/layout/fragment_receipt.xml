@@ -1,14 +1,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background" >
+    android:background="@color/background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5dp" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -16,20 +14,47 @@
             android:animateLayoutChanges="true"
             android:background="@drawable/card_background"
             android:orientation="vertical"
-            android:padding="5dp" >
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:ems="10"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textSize="17sp"
+                android:padding="1dp"
                 android:gravity="center" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:src="@drawable/card_shadow" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/card_background"
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/by_attendee" />
+
+            <ImageView
+                android:background="#cccccc"
+                android:layout_width="match_parent"
+                android:layout_margin="2dp"
+                android:layout_height="1px" />
 
             <LinearLayout
                 android:id="@+id/attendee_view_list"
@@ -37,18 +62,42 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:animateLayoutChanges="true"
-                android:orientation="vertical" >
-            </LinearLayout>
+                android:orientation="vertical"></LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:src="@drawable/card_shadow" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/card_background"
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/account_info" />
 
+            <ImageView
+                android:background="#cccccc"
+                android:layout_width="match_parent"
+                android:layout_margin="2dp"
+                android:layout_height="1px" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/bank_name"
@@ -63,10 +112,36 @@
                     android:layout_weight="1" />
             </LinearLayout>
 
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:src="@drawable/card_shadow" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/card_background"
+            android:orientation="vertical"
+            android:padding="5dp">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/items" />
+
+            <ImageView
+                android:background="#cccccc"
+                android:layout_width="match_parent"
+                android:layout_margin="2dp"
+                android:layout_height="1px" />
 
             <LinearLayout
                 android:id="@+id/payment_view_list"
@@ -74,15 +149,14 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:animateLayoutChanges="true"
-                android:orientation="vertical" >
-            </LinearLayout>
+                android:orientation="vertical"></LinearLayout>
         </LinearLayout>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:src="@drawable/card_shadow" />
     </LinearLayout>
 

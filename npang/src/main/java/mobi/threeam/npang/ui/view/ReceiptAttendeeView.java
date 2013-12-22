@@ -49,27 +49,28 @@ public class ReceiptAttendeeView extends RelativeLayout {
 	}
 	
 	public void bind(final Attendee attendee, int amount) {
+        TextViewUtils.currency(amountView, amount);
+
 		boolean isPaid = attendee.paidAt != null;
 		this.attendeeView.setText(attendee.name);
 		this.attendeeView.setChecked(isPaid);
 		TextViewUtils.strike(attendeeView, isPaid);
+        TextViewUtils.strike(amountView, isPaid);
 
 		this.attendeeView.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				attendee.paidAt = isChecked ? new Date() : null;
-				attendeeView.setChecked(isChecked);
-				TextViewUtils.strike(attendeeView, isChecked);
-				TextViewUtils.strike(amountView, isChecked);
-				try {
-					attendeeDao.update(attendee);
-				} catch (SQLException e) {
-					Logger.e(e);
-				}
-			}
-		});
-        TextViewUtils.currency(amountView, amount);
-		TextViewUtils.strike(amountView, isPaid);
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                attendee.paidAt = isChecked ? new Date() : null;
+                attendeeView.setChecked(isChecked);
+                TextViewUtils.strike(attendeeView, isChecked);
+                TextViewUtils.strike(amountView, isChecked);
+                try {
+                    attendeeDao.update(attendee);
+                } catch (SQLException e) {
+                    Logger.e(e);
+                }
+            }
+        });
 	}
 
 }

@@ -40,7 +40,7 @@ public class ReceiptPaymentView extends RelativeLayout {
 		int attendeeCount = payment.attendees.size();
 
         TextViewUtils.place(place, index, payment.place);
-        TextViewUtils.place(description, index, String.format("%s ÷ %d", payment.amount, attendeeCount));
+        description.setText(String.format("%s ÷ %d", payment.amount, attendeeCount));
         TextViewUtils.currency(amount, payment.amount / attendeeCount);
 	}
 }
