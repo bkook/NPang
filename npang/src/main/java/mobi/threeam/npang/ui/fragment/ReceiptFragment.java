@@ -111,8 +111,6 @@ public class ReceiptFragment extends SherlockFragment {
 	}
 
     public void onEventMainThread(SetPaymentGroupEvent event) {
-//        save();
-
         FragmentManager fm = getFragmentManager();
         switch (event.group.state) {
             case PaymentGroup.STATE_NONE:
@@ -233,10 +231,7 @@ public class ReceiptFragment extends SherlockFragment {
 		for (Payment payment : paymentGroup.payments) {
 			ReceiptPaymentView view = (ReceiptPaymentView) paymentViewList
 					.getChildAt(i);
-			view.bind(payment);
-
-			// ViewHolder holder = paymentViewHolderList.get(i);
-			// holder.setUp(i, payment);
+			view.bind(i, payment);
 			i++;
 		}
 	}

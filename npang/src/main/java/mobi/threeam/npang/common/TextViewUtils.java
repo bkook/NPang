@@ -1,16 +1,17 @@
 package mobi.threeam.npang.common;
 
-import java.text.NumberFormat;
-import java.util.Locale;
+import android.content.Context;
+import android.graphics.Paint;
+import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import mobi.threeam.npang.R;
 import mobi.threeam.npang.database.model.Payment;
-
-import android.content.Context;
-import android.graphics.Paint;
-import android.widget.TextView;
 
 public class TextViewUtils {
 	public static void strike(TextView tv, boolean enable) {
@@ -29,6 +30,14 @@ public class TextViewUtils {
 	public static void attendees(BootstrapButton view, Payment payment) {
 		view.setText(getAttendeesString(view.getContext(), payment));
 	}
+
+    public static void place(TextView view, int index, String place) {
+        if (TextUtils.isEmpty(place)) {
+            view.setText(view.getContext().getString(R.string.payment_title_hint, index+1));
+        } else {
+            view.setText(place);
+        }
+    }
 
 	private static String getAttendeesString(Context context, Payment payment) {
 		if (payment.attendees == null || payment.attendees.size() == 0) {

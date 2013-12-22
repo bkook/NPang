@@ -1,7 +1,5 @@
 package mobi.threeam.npang.ui.view;
 
-import mobi.threeam.npang.R;
-import mobi.threeam.npang.database.model.Payment;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
@@ -10,9 +8,13 @@ import android.widget.TextView;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.ViewById;
 
+import mobi.threeam.npang.R;
+import mobi.threeam.npang.common.TextViewUtils;
+import mobi.threeam.npang.database.model.Payment;
+
 @EViewGroup(R.layout.item_receipt_payment)
 public class ReceiptPaymentView extends RelativeLayout {
-	
+
 	@ViewById
 	TextView place;
 
@@ -34,11 +36,11 @@ public class ReceiptPaymentView extends RelativeLayout {
 		super(context);
 	}
 
-	public void bind(Payment payment) {
+	public void bind(int index, Payment payment) {
 		int attendeeCount = payment.attendees.size();
 
-		place.setText(payment.place);
-		description.setText(String.format("%s / %d", payment.amount, attendeeCount));
-		amount.setText(String.valueOf(payment.amount / attendeeCount));
+        TextViewUtils.place(place, index, payment.place);
+        TextViewUtils.place(description, index, String.format("%s ÷ %d", payment.amount, attendeeCount));
+        TextViewUtils.currency(amount, payment.amount / attendeeCount);
 	}
 }

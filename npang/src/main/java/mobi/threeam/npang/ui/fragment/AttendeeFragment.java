@@ -1,27 +1,5 @@
 package mobi.threeam.npang.ui.fragment;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import mobi.threeam.npang.R;
-import mobi.threeam.npang.common.Logger;
-import mobi.threeam.npang.common.NPangPreference_;
-import mobi.threeam.npang.database.DBHelper;
-import mobi.threeam.npang.database.dao.AttendeeDao;
-import mobi.threeam.npang.database.dao.ContactsLoader;
-import mobi.threeam.npang.database.dao.ContactsLoader.Contact;
-import mobi.threeam.npang.database.dao.PayAttRelationDao;
-import mobi.threeam.npang.database.dao.PaymentDao;
-import mobi.threeam.npang.database.dao.PaymentGroupDao;
-import mobi.threeam.npang.database.model.Attendee;
-import mobi.threeam.npang.database.model.PayAttRelation;
-import mobi.threeam.npang.database.model.Payment;
-import mobi.threeam.npang.database.model.PaymentGroup;
-import mobi.threeam.npang.event.ChangeAttendeesEvent;
-import mobi.threeam.npang.ui.adapter.AttendeeAdapter;
-import mobi.threeam.npang.ui.adapter.ContactAdapter;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -41,7 +19,29 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 import com.meetme.android.horizontallistview.HorizontalListView;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import de.greenrobot.event.EventBus;
+import mobi.threeam.npang.R;
+import mobi.threeam.npang.common.Logger;
+import mobi.threeam.npang.common.NPangPreference_;
+import mobi.threeam.npang.database.DBHelper;
+import mobi.threeam.npang.database.dao.AttendeeDao;
+import mobi.threeam.npang.database.dao.ContactsLoader;
+import mobi.threeam.npang.database.dao.ContactsLoader.Contact;
+import mobi.threeam.npang.database.dao.PayAttRelationDao;
+import mobi.threeam.npang.database.dao.PaymentDao;
+import mobi.threeam.npang.database.dao.PaymentGroupDao;
+import mobi.threeam.npang.database.model.Attendee;
+import mobi.threeam.npang.database.model.PayAttRelation;
+import mobi.threeam.npang.database.model.Payment;
+import mobi.threeam.npang.database.model.PaymentGroup;
+import mobi.threeam.npang.event.ChangeAttendeesEvent;
+import mobi.threeam.npang.ui.adapter.AttendeeAdapter;
+import mobi.threeam.npang.ui.adapter.ContactAdapter;
 
 @EFragment(R.layout.fragment_attendee)
 public class AttendeeFragment extends SherlockFragment {
@@ -140,9 +140,9 @@ public class AttendeeFragment extends SherlockFragment {
 		relationDao.delete(payment, attendee);
 		List<PayAttRelation> relations = null;
 		try {
-			relations = relationDao.queryForEq("payment_id", payment.id);
+			relations = relationDao.queryForEq("attendee_id", attendee.id);
 			if (relations != null && relations.size() == 0) {
-				attendeeDao.delete(attendee);
+                attendeeDao.deleteById(attendee.id);
 			}
 		} catch (SQLException e) {
 			Logger.e(e);

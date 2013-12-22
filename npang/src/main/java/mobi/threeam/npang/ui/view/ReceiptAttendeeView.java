@@ -1,16 +1,6 @@
 package mobi.threeam.npang.ui.view;
 
-import java.sql.SQLException;
-import java.util.Date;
-
-import mobi.threeam.npang.R;
-import mobi.threeam.npang.common.Logger;
-import mobi.threeam.npang.common.TextViewUtils;
-import mobi.threeam.npang.database.DBHelper;
-import mobi.threeam.npang.database.dao.AttendeeDao;
-import mobi.threeam.npang.database.model.Attendee;
 import android.content.Context;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -21,6 +11,16 @@ import android.widget.TextView;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.OrmLiteDao;
 import com.googlecode.androidannotations.annotations.ViewById;
+
+import java.sql.SQLException;
+import java.util.Date;
+
+import mobi.threeam.npang.R;
+import mobi.threeam.npang.common.Logger;
+import mobi.threeam.npang.common.TextViewUtils;
+import mobi.threeam.npang.database.DBHelper;
+import mobi.threeam.npang.database.dao.AttendeeDao;
+import mobi.threeam.npang.database.model.Attendee;
 
 @EViewGroup(R.layout.item_receipt_attendee)
 public class ReceiptAttendeeView extends RelativeLayout {
@@ -68,7 +68,7 @@ public class ReceiptAttendeeView extends RelativeLayout {
 				}
 			}
 		});
-		this.amountView.setText("" + amount);
+        TextViewUtils.currency(amountView, amount);
 		TextViewUtils.strike(amountView, isPaid);
 	}
 
