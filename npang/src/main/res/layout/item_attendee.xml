@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:civ="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/attendee_size"
+    android:layout_height="@dimen/attendee_size"
+    android:padding="2dp"
+    android:orientation="vertical" >
+
+    <!--
+    <net.jangc.civ.CircularImageView
+        android:id="@+id/photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="#00FF00"
+        android:scaleType="centerCrop"
+        civ:border_width="1dp"
+        civ:border_color="#FF0000"
+        android:src="@drawable/ic_action_user" />
+    -->
+
+    <ImageView
+        android:id="@+id/photo"
+        android:padding="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_action_user" />
+
+    <!--<de.ankri.views.AutoScaleTextView-->
+    <TextView
+        android:id="@+id/name"
+        android:textSize="14sp"
+        android:background="#66000000"
+        android:textColor="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:ellipsize="end"
+        android:lines="1"
+        android:gravity="center" />
+
+</RelativeLayout>

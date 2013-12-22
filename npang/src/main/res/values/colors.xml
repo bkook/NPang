@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="card_background">#FFFFFF</color>
+    <color name="background">#EEEEEE</color>
+    <color name="line">#DDDDDD</color>
+
+</resources>
