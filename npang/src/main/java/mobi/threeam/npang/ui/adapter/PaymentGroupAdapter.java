@@ -1,19 +1,19 @@
 package mobi.threeam.npang.ui.adapter;
 
-import java.util.HashSet;
-import java.util.List;
-
-import mobi.threeam.npang.common.AnimUtils;
-import mobi.threeam.npang.common.Logger;
-import mobi.threeam.npang.database.model.PaymentGroup;
-import mobi.threeam.npang.ui.view.PaymentGroupItemView;
-import mobi.threeam.npang.ui.view.PaymentGroupItemView_;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.googlecode.androidannotations.annotations.EBean;
+
+import java.util.HashSet;
+import java.util.List;
+
+import mobi.threeam.npang.common.AnimUtils;
+import mobi.threeam.npang.database.model.PaymentGroup;
+import mobi.threeam.npang.ui.view.PaymentGroupItemView;
+import mobi.threeam.npang.ui.view.PaymentGroupItemView_;
 
 @EBean
 public class PaymentGroupAdapter extends BaseAdapter {
@@ -35,6 +35,20 @@ public class PaymentGroupAdapter extends BaseAdapter {
 		this.data.add(index, group);
 		notifyDataSetChanged();
 	}
+
+    public void refresh(PaymentGroup group) {
+        int index = 0;
+        for (PaymentGroup item : this.data) {
+            if (item.id == group.id) {
+                break;
+            }
+            index ++;
+        }
+        if (index < data.size()) {
+            data.add(index, group);
+            data.remove(index + 1);
+        }
+    }
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

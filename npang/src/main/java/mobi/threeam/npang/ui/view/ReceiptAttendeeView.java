@@ -14,13 +14,18 @@ import com.googlecode.androidannotations.annotations.ViewById;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import mobi.threeam.npang.R;
 import mobi.threeam.npang.common.Logger;
 import mobi.threeam.npang.common.TextViewUtils;
 import mobi.threeam.npang.database.DBHelper;
 import mobi.threeam.npang.database.dao.AttendeeDao;
+import mobi.threeam.npang.database.dao.PaymentGroupDao;
 import mobi.threeam.npang.database.model.Attendee;
+import mobi.threeam.npang.database.model.PaymentGroup;
+import mobi.threeam.npang.event.PaymentGroupChangedEvent;
 
 @EViewGroup(R.layout.item_receipt_attendee)
 public class ReceiptAttendeeView extends RelativeLayout {
@@ -34,7 +39,10 @@ public class ReceiptAttendeeView extends RelativeLayout {
 	
 	@OrmLiteDao(helper = DBHelper.class, model = Attendee.class)
 	AttendeeDao attendeeDao;
-	
+
+    @OrmLiteDao(helper = DBHelper.class, model = PaymentGroup.class)
+    PaymentGroupDao paymentGroupDao;
+
 
 	public ReceiptAttendeeView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -65,7 +73,23 @@ public class ReceiptAttendeeView extends RelativeLayout {
                 TextViewUtils.strike(attendeeView, isChecked);
                 TextViewUtils.strike(amountView, isChecked);
                 try {
+                    PaymentGroup paymentGroup = attendee.paymentGroup;
+
                     attendeeDao.update(attendee);
+                    List<Attendee> attendees = attendeeDao.queryForEq ("paymentGroup_id", attendee.paymentGroup.id);
+
+                    boolean completed = true;
+                    for (Attendee attendee: attendees) {
+                        if (attendee.paidAt == null) {
+                            completed = false;
+                            break;
+                        }
+                    }
+                    if (paymentGroup.completed != completed) {
+                        paymentGroup.completed = completed;
+                        paymentGroupDao.update(paymentGroup);
+                        EventBus.getDefault().post(new PaymentGroupChangedEvent(paymentGroup));
+                    }
                 } catch (SQLException e) {
                     Logger.e(e);
                 }

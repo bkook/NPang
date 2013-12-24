@@ -41,7 +41,10 @@ public class PaymentGroup {
 	
 	@DatabaseField
 	public String locale;
-	
+
+//    @DatabaseField
+//    public Date alarmAt;
+
 //	@DatabaseField
 //	public String attendeeNames;
 	

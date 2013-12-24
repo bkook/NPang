@@ -33,6 +33,7 @@ import mobi.threeam.npang.database.dao.PaymentGroupDao;
 import mobi.threeam.npang.database.model.Payment;
 import mobi.threeam.npang.database.model.PaymentGroup;
 import mobi.threeam.npang.event.CreatePaymentGroupEvent;
+import mobi.threeam.npang.event.PaymentGroupChangedEvent;
 import mobi.threeam.npang.event.SetPaymentGroupEvent;
 import mobi.threeam.npang.ui.adapter.PaymentGroupAdapter;
 import mobi.threeam.npang.ui.fragment.InputFragment_;
@@ -111,6 +112,10 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 	public void onEventMainThread(CreatePaymentGroupEvent event) {
 		adapter.addDataAt(0, event.group);
 	}
+
+    public void onEventMainThread(PaymentGroupChangedEvent event) {
+       adapter.refresh(event.group);
+    }
 	
 	@AfterViews
 	void bindDrawer() {

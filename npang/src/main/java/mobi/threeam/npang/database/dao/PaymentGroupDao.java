@@ -54,7 +54,7 @@ public class PaymentGroupDao extends BaseDaoImpl<PaymentGroup, Long> {
         QueryBuilder<PaymentGroup, Long> builder = null;
         try {
             builder = queryBuilder();
-            builder.orderBy("state", true);
+            builder.orderBy("completed", true);
             builder.orderBy("createdAt", false);
             return builder.query();
         } catch (SQLException e) {

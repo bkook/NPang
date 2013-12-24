@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -76,6 +77,10 @@ public class ReceiptFragment extends SherlockFragment {
 
 	@ViewById
 	TextView bankAccount;
+
+
+    @ViewById
+    ToggleButton alarmToggle;
 
 	@OrmLiteDao(helper = DBHelper.class, model = PaymentGroup.class)
 	PaymentGroupDao paymentGroupDao;
@@ -206,10 +211,10 @@ public class ReceiptFragment extends SherlockFragment {
 
 		int i = 0;
 		for (Attendee attendee : attendees) {
+            attendee.paymentGroup = paymentGroup;
 			ReceiptAttendeeView view = (ReceiptAttendeeView) attendeeViewList
 					.getChildAt(i);
 			Logger.e("view " + view + " " + attendee.id + " : " + map.containsKey(attendee.id));
-
 			view.bind(attendee, map.get(attendee.id));
 			i++;
 		}
