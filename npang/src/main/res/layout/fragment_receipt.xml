@@ -17,11 +17,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/digitalClock"/>
 
-        <TextClock
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textClock"/>
-
         <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
