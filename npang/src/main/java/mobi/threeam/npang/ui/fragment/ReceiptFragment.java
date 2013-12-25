@@ -106,10 +106,6 @@ public class ReceiptFragment extends SherlockFragment {
     @ViewById
     ToggleButton alarmToggle;
 
-    @ViewById
-    TextView test;
-
-
     @ColorRes
     int alarmEnabledColor;
 
@@ -209,8 +205,6 @@ public class ReceiptFragment extends SherlockFragment {
 	void setUpTitle() {
 		title.setText(TextUtils.isEmpty(paymentGroup.title) ? TimeUtils
 				.buildTitle(paymentGroup.createdAt) : paymentGroup.title);
-
-        test.setText(makeReceiptText());
 	}
 
     void setUpAlarm() {
