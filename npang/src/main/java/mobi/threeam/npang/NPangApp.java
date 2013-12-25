@@ -31,7 +31,9 @@ public class NPangApp extends Application {
 		app = this;
 		
 		getHelper();
-		
+
+
+
 //		initImageLoader();
 	}
 	

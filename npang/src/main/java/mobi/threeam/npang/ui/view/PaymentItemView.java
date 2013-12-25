@@ -1,11 +1,5 @@
 package mobi.threeam.npang.ui.view;
 
-import mobi.threeam.npang.R;
-import mobi.threeam.npang.common.TextViewUtils;
-import mobi.threeam.npang.database.model.Payment;
-import mobi.threeam.npang.event.AmountChangedEvent;
-import mobi.threeam.npang.ui.activity.AttendeesActivity_;
-import net.jangc.currencyet.CurrencyEditText;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +8,6 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
@@ -22,10 +15,17 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.ViewById;
 
+import net.jangc.currencyet.CurrencyEditText;
+
 import de.greenrobot.event.EventBus;
+import mobi.threeam.npang.R;
+import mobi.threeam.npang.common.TextViewUtils;
+import mobi.threeam.npang.database.model.Payment;
+import mobi.threeam.npang.event.AmountChangedEvent;
+import mobi.threeam.npang.ui.activity.AttendeesActivity_;
 
 @EViewGroup(R.layout.item_payment)
-public class PaymentItemView extends RelativeLayout implements OnTouchListener {
+public class PaymentItemView extends RelativeLayout {
 	@ViewById
 	public EditText place;
 	@ViewById
@@ -51,8 +51,6 @@ public class PaymentItemView extends RelativeLayout implements OnTouchListener {
 	}
 	
 	void init() {
-		this.setOnTouchListener(this);
-		
 	}
 
 	public void setUp(int index, Payment payment) {
@@ -110,8 +108,9 @@ public class PaymentItemView extends RelativeLayout implements OnTouchListener {
 		return false;
 	}
 
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		return false;
-	}
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+
+        return true;//super.onInterceptTouchEvent(ev);
+    }
 }

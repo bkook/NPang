@@ -64,6 +64,7 @@ import mobi.threeam.npang.database.model.Payment;
 import mobi.threeam.npang.database.model.PaymentGroup;
 import mobi.threeam.npang.event.PaymentGroupChangedEvent;
 import mobi.threeam.npang.event.SetPaymentGroupEvent;
+import mobi.threeam.npang.ui.activity.MainActivity;
 import mobi.threeam.npang.ui.view.ReceiptAttendeeView;
 import mobi.threeam.npang.ui.view.ReceiptAttendeeView_;
 import mobi.threeam.npang.ui.view.ReceiptPaymentView;
@@ -144,6 +145,15 @@ public class ReceiptFragment extends SherlockFragment {
 
 		loadPaymentGroup();
 	}
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        boolean enabled = ! ((MainActivity)getSherlockActivity()).isDrawerOpened();
+        for (int i=0; i < menu.size(); i++) {
+            menu.getItem(i).setEnabled(enabled);
+        }
+    }
 
     public void onEventMainThread(SetPaymentGroupEvent event) {
         FragmentManager fm = getFragmentManager();

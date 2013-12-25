@@ -43,7 +43,6 @@ public class PaymentGroupItemView extends RelativeLayout {
 			group.totalAmount += payment.amount;
 		}
 
-
 		TextViewUtils.currency(amount, group.totalAmount);
 		date.setText(TimeUtils.format(group.createdAt));
 

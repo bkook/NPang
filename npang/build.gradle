@@ -67,7 +67,6 @@ android {
                     '-s', aptOutput
             ]
         }
-
     }
 }
 
@@ -89,5 +88,6 @@ dependencies {
     compile project(':libs:AndroidHorizontalListView')
     compile project(':libs:CurrencyEditText')
 }
+
 
 

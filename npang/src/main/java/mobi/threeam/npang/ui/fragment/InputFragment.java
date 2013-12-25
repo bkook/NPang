@@ -15,6 +15,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
@@ -48,6 +49,7 @@ import mobi.threeam.npang.database.model.PaymentGroup;
 import mobi.threeam.npang.event.AmountChangedEvent;
 import mobi.threeam.npang.event.ChangeAttendeesEvent;
 import mobi.threeam.npang.event.SetPaymentGroupEvent;
+import mobi.threeam.npang.ui.activity.MainActivity;
 import mobi.threeam.npang.ui.view.PaymentItemView;
 import mobi.threeam.npang.ui.view.PaymentItemView_;
 
@@ -155,7 +157,16 @@ public class InputFragment extends SherlockFragment {
 		save();
 	}
 
-	@ItemSelect
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        boolean enabled = ! ((MainActivity)getSherlockActivity()).isDrawerOpened();
+        for (int i=0; i < menu.size(); i++) {
+            menu.getItem(i).setEnabled(enabled);
+        }
+    }
+
+    @ItemSelect
 	public void bankNameSpinner(boolean selected, int position) {
 		prefs.bankName().put(bankNameSpinner.getSelectedItem().toString());
 	}

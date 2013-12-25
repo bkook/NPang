@@ -148,10 +148,14 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
+                adapter.notifyDataSetChanged();
+                supportInvalidateOptionsMenu();
 			}
 
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
+                adapter.notifyDataSetChanged();
+                supportInvalidateOptionsMenu();
 			}
 
 			@Override
@@ -162,12 +166,15 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 			@Override
 			public void onDrawerStateChanged(int newState) {
 				super.onDrawerStateChanged(newState);
-                adapter.notifyDataSetChanged();
 			}
 		};
 
 		drawerLayout.setDrawerListener(drawerToggle);
 	}
+
+    public boolean isDrawerOpened() {
+        return drawerLayout.isDrawerOpen(drawer);
+    }
 	
 
 	@ItemClick
