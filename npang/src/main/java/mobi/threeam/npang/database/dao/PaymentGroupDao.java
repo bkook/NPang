@@ -41,6 +41,7 @@ public class PaymentGroupDao extends BaseDaoImpl<PaymentGroup, Long> {
 		group.createdAt = new Date();
 		group.locale = Locale.getDefault().toString();
 		group.totalAmount = 0;
+        group.alarmTime = new Date();
 		group.state = PaymentGroup.STATE_NONE;
 		
 		create(group);

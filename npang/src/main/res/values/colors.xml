@@ -5,4 +5,7 @@
     <color name="background">#EEEEEE</color>
     <color name="line">#DDDDDD</color>
 
+    <color name="alarm_enabled_color">#ffffce6c</color>
+    <color name="alarm_disabled_color">#ffcccccc</color>
+
 </resources>

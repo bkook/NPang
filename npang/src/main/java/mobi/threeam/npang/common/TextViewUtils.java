@@ -7,11 +7,9 @@ import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 
-import java.text.NumberFormat;
-import java.util.Locale;
-
 import mobi.threeam.npang.R;
 import mobi.threeam.npang.database.model.Payment;
+import mobi.threeam.npang.database.model.PaymentGroup;
 
 public class TextViewUtils {
 	public static void strike(TextView tv, boolean enable) {
@@ -21,9 +19,13 @@ public class TextViewUtils {
 			tv.setPaintFlags(tv.getPaintFlags() &~ Paint.STRIKE_THRU_TEXT_FLAG);
 		}
 	}
-	
+
+    public static String title(PaymentGroup paymentGroup) {
+        return TextUtils.isEmpty(paymentGroup.title) ? TimeUtils.buildTitle(paymentGroup.createdAt) : paymentGroup.title;
+    }
+
 	public static void currency(TextView view, double amount) {
-		String val = NumberFormat.getCurrencyInstance(Locale.KOREA).format(amount);
+        String val = CurrencyUtils.format(amount);
 		view.setText(val);
 	}
 	

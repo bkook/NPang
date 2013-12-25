@@ -2,6 +2,7 @@ package mobi.threeam.npang.ui.view;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -49,6 +50,9 @@ public class PaymentGroupItemView extends RelativeLayout {
         TextViewUtils.strike(title, group.completed);
         TextViewUtils.strike(amount, group.completed);
         TextViewUtils.strike(date, group.completed);
+
+        boolean showAmount = group.state == PaymentGroup.STATE_CALCULATED;
+        amount.setVisibility(showAmount ? View.VISIBLE : View.INVISIBLE);
 	}
 
 }

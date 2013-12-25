@@ -1,7 +1,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <RelativeLayout
-        android:padding="3dp"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
@@ -9,6 +9,7 @@
             android:id="@+id/amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
             android:layout_alignParentRight="true" />
 
         <TextView
@@ -19,8 +20,21 @@
 
         <TextView
             android:id="@+id/date"
+            android:textSize="11sp"
+            android:textColor="#ff8d8d8d"
+            android:layout_marginLeft="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/title" />
+
+        <TextView
+            android:id="@+id/attendees"
+            android:textSize="11sp"
+            android:textColor="#ff8d8d8d"
+            android:layout_marginLeft="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/date"
             android:layout_below="@id/title" />
     </RelativeLayout>
 

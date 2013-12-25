@@ -9,19 +9,34 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#ffffce6c">
+        android:background="@color/alarm_disabled_color">
 
-
-        <DigitalClock
+        <Spinner
+            android:id="@+id/alarm_period"
+            android:entries="@array/alarm_period"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/digitalClock"/>
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical" />
+
+        <Button
+            android:id="@+id/alarm_time"
+            android:text="12:12 am"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
         <ToggleButton
+            android:id="@+id/alarm_toggle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:id="@+id/alarm_toggle"/>
+            android:layout_height="match_parent"
+            android:textOn="@string/alarm_on"
+            android:textOff="@string/alarm_off"
+            android:checked="false" />
 
     </LinearLayout>
 
@@ -35,7 +50,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="20dp"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,8 +73,8 @@
                     android:ems="10"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:textSize="17sp"
-                    android:padding="1dp"
+                    android:textSize="18sp"
+                    android:padding="2.5dp"
                     android:gravity="center"/>
 
             </LinearLayout>
@@ -126,6 +147,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:orientation="horizontal">
 
                     <TextView

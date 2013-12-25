@@ -87,6 +87,9 @@ public class ReceiptAttendeeView extends RelativeLayout {
                     }
                     if (paymentGroup.completed != completed) {
                         paymentGroup.completed = completed;
+                        if (completed) {
+                            paymentGroup.alarmEnabled = false;
+                        }
                         paymentGroupDao.update(paymentGroup);
                         EventBus.getDefault().post(new PaymentGroupChangedEvent(paymentGroup));
                     }

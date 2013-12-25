@@ -1,13 +1,19 @@
 package mobi.threeam.npang.ui.fragment;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -19,6 +25,7 @@ import com.actionbarsherlock.widget.ShareActionProvider;
 import com.actionbarsherlock.widget.ShareActionProvider.OnShareTargetSelectedListener;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.FragmentArg;
 import com.googlecode.androidannotations.annotations.OptionsItem;
@@ -27,17 +34,25 @@ import com.googlecode.androidannotations.annotations.OrmLiteDao;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.res.ColorRes;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import mobi.threeam.npang.R;
+import mobi.threeam.npang.common.CurrencyUtils;
 import mobi.threeam.npang.common.Logger;
 import mobi.threeam.npang.common.NPangPreference_;
 import mobi.threeam.npang.common.Notifier;
+import mobi.threeam.npang.common.TextViewUtils;
 import mobi.threeam.npang.common.TimeUtils;
 import mobi.threeam.npang.database.DBHelper;
 import mobi.threeam.npang.database.dao.AttendeeDao;
@@ -47,6 +62,7 @@ import mobi.threeam.npang.database.model.Attendee;
 import mobi.threeam.npang.database.model.PayAttRelation;
 import mobi.threeam.npang.database.model.Payment;
 import mobi.threeam.npang.database.model.PaymentGroup;
+import mobi.threeam.npang.event.PaymentGroupChangedEvent;
 import mobi.threeam.npang.event.SetPaymentGroupEvent;
 import mobi.threeam.npang.ui.view.ReceiptAttendeeView;
 import mobi.threeam.npang.ui.view.ReceiptAttendeeView_;
@@ -78,9 +94,27 @@ public class ReceiptFragment extends SherlockFragment {
 	@ViewById
 	TextView bankAccount;
 
+    @ViewById
+    ViewGroup alarmArea;
+
+    @ViewById
+    Spinner alarmPeriod;
+
+    @ViewById
+    Button alarmTime;
 
     @ViewById
     ToggleButton alarmToggle;
+
+    @ViewById
+    TextView test;
+
+
+    @ColorRes
+    int alarmEnabledColor;
+
+    @ColorRes
+    int alarmDisabledColor;
 
 	@OrmLiteDao(helper = DBHelper.class, model = PaymentGroup.class)
 	PaymentGroupDao paymentGroupDao;
@@ -99,12 +133,12 @@ public class ReceiptFragment extends SherlockFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		EventBus.getDefault().register(this, SetPaymentGroupEvent.class);
+		EventBus.getDefault().register(this);
 	}
 
 	@Override
 	public void onDetach() {
-		EventBus.getDefault().unregister(this, SetPaymentGroupEvent.class);
+		EventBus.getDefault().unregister(this);
 		super.onDetach();
 	}
 
@@ -132,6 +166,9 @@ public class ReceiptFragment extends SherlockFragment {
         }
     }
 
+    public void onEventMainThread(PaymentGroupChangedEvent event) {
+        setAlarmAreaEnabled(event.group.alarmEnabled);
+    }
 
     @Background
 	void loadPaymentGroup() {
@@ -161,6 +198,7 @@ public class ReceiptFragment extends SherlockFragment {
 		setUpAttendees();
 		setUpBankAccount();
 		setUpPayments();
+        setUpAlarm();
 
 		if (paymentGroup.payments == null) {
 			paymentViewList.removeAllViews();
@@ -171,7 +209,47 @@ public class ReceiptFragment extends SherlockFragment {
 	void setUpTitle() {
 		title.setText(TextUtils.isEmpty(paymentGroup.title) ? TimeUtils
 				.buildTitle(paymentGroup.createdAt) : paymentGroup.title);
+
+        test.setText(makeReceiptText());
 	}
+
+    void setUpAlarm() {
+        alarmPeriod.setSelection(1);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(paymentGroup.alarmTime);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("h:m a");
+        alarmTime.setText(dateFormatter.format(paymentGroup.alarmTime));
+
+        setAlarmAreaEnabled(paymentGroup.alarmEnabled);
+        alarmToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                paymentGroup.alarmEnabled = isChecked;
+                try {
+                    paymentGroupDao.update(paymentGroup);
+                } catch (SQLException e) {
+                    Logger.e(e);
+                }
+                setAlarmAreaEnabled(isChecked);
+            }
+        });
+    }
+
+    void setAlarmAreaEnabled(boolean enabled) {
+        alarmToggle.setChecked(enabled);
+        alarmArea.setBackgroundColor(enabled ? alarmEnabledColor : alarmDisabledColor);
+    }
+
+    @Click
+    void alarmTimeClicked() {
+        new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hour, int min) {
+                paymentGroup.alarmTime = new Date();
+            }
+        }, 11, 11, false).show();
+    }
 
 	void setUpAttendees() {
 		List<Attendee> attendees = null;
@@ -214,7 +292,6 @@ public class ReceiptFragment extends SherlockFragment {
             attendee.paymentGroup = paymentGroup;
 			ReceiptAttendeeView view = (ReceiptAttendeeView) attendeeViewList
 					.getChildAt(i);
-			Logger.e("view " + view + " " + attendee.id + " : " + map.containsKey(attendee.id));
 			view.bind(attendee, map.get(attendee.id));
 			i++;
 		}
@@ -264,7 +341,8 @@ public class ReceiptFragment extends SherlockFragment {
 		ft.replace(R.id.contents, fragment);
 		ft.commit();
 	}
-	
+
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
@@ -284,10 +362,96 @@ public class ReceiptFragment extends SherlockFragment {
 		});
 	}
 
+    private String makeReceiptText() {
+         StringBuilder builder = new StringBuilder();
+        builder.append("[").append(TextViewUtils.title(paymentGroup)).append("]").append("\r\n\r\n");
+
+        // attendees
+        fillAttendees(builder);
+
+        // bank
+        builder.append(getString(R.string.receipt_format_title, getString(R.string.account_info)))
+                .append(paymentGroup.bankName).append(paymentGroup.bankAccount).append("\r\n")
+                .append("\r\n");
+
+        // payments
+        fillPayments(builder);
+        builder.append("\r\n");
+
+        return builder.toString();
+    }
+
+    private void fillAttendees(StringBuilder builder) {
+        builder.append(getString(R.string.receipt_format_title, getString(R.string.by_attendee)));
+
+        List<Attendee> attendees = null;
+        try {
+            attendees = attendeeDao.queryForEq("paymentGroup_id",
+                    paymentGroup.id);
+        } catch (SQLException e) {
+            Logger.e(e);
+            return;
+        }
+
+        HashMap<Long, Integer> map = new HashMap<Long, Integer>();
+
+        for (Payment payment : paymentGroup.payments) {
+            int attendeeCount = payment.attendees.size();
+            for (PayAttRelation relation : payment.attendees) {
+                Attendee attendee = relation.attendee;
+
+                if (!map.containsKey(attendee.id)) {
+                    map.put(attendee.id, 0);
+                }
+                Integer amount = map.get(attendee.id);
+                map.put(attendee.id, amount + (payment.amount / attendeeCount));
+            }
+        }
+
+        int i = 0;
+        for (Attendee attendee : attendees) {
+            attendee.paymentGroup = paymentGroup;
+            int resId = R.string.receipt_format_item_attendee;
+            if (attendee.paidAt != null) {
+                resId = R.string.receipt_format_item_attendee_checked;
+            }
+            builder.append(getString(resId, attendee.name, CurrencyUtils.format(map.get(attendee.id))));
+            i++;
+        }
+                paymentGroup.totalAmount = 0;
+        for (Payment payment : paymentGroup.payments) {
+            paymentGroup.totalAmount += payment.amount;
+        }
+
+        builder.append("------------------").append("\r\n")
+                .append(getString(R.string.total)).append(" : ").append(CurrencyUtils.format(paymentGroup.totalAmount)).append("\r\n")
+                .append("\r\n");
+
+    }
+
+    private void fillPayments(StringBuilder builder) {
+        builder.append(getString(R.string.receipt_format_title, getString(R.string.items)));
+
+        int index = 1;
+        for (Payment payment : paymentGroup.payments) {
+            String paymentIndex = getString(R.string.payment_title_hint, index);
+            if (!TextUtils.isEmpty(payment.place)) {
+                paymentIndex = paymentIndex + "-" + payment.place;
+            }
+
+            String paymentItem = getString(R.string.receipt_format_item_payment, paymentIndex,
+                    NumberFormat.getCurrencyInstance(Locale.KOREA).format(payment.amount), payment.attendees.size(), "10");
+
+            builder.append(paymentItem);
+            index++;
+        }
+    }
+
 	private Intent buildShareIntent() {
 	    Intent intent = new Intent(Intent.ACTION_SEND);
 	    intent.setType("text/plain");
-	    intent.putExtra(Intent.EXTRA_TEXT, "hello");
+
+        intent.putExtra(Intent.EXTRA_TEXT, makeReceiptText());
 		return intent;
 	}
 

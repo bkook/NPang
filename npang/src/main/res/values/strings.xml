@@ -20,6 +20,19 @@
     <string name="by_attendee">참석자별</string>
     <string name="attendee_count">%d명</string>
     <string name="add_attendee">추가</string>
+    <string name="alarm_on">알림</string>
+    <string name="alarm_off">안알림</string>
+    <string name="receipt_format_title">▷ %s\r\n</string>
+    <string name="receipt_format_item_attendee"> • %1$s : %2$s\r\n</string>
+    <string name="receipt_format_item_attendee_checked"> ✓ %1$s : %2$s\r\n</string>
+    <string name="receipt_format_item_payment"> • %1$s :\r\n   %2$s ÷  %3$d =  %4$s\r\n</string>
+
+    <string-array name="alarm_period">
+        <item>매일</item>
+        <item>격일로</item>
+        <item>3일마다</item>
+        <item>일주일마다</item>
+    </string-array>
 
     <string-array name="banks">
         <item>경남은행</item>

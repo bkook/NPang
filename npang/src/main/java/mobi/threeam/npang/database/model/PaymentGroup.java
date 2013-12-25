@@ -42,19 +42,20 @@ public class PaymentGroup {
 	@DatabaseField
 	public String locale;
 
-//    @DatabaseField
-//    public Date alarmAt;
+    @DatabaseField
+    public int alarmPeriod;
 
-//	@DatabaseField
-//	public String attendeeNames;
-	
+    @DatabaseField
+    public Date alarmTime;
+
+    @DatabaseField
+    public boolean alarmEnabled;
+
 	@ForeignCollectionField(eager=false, orderAscending=true)
 	public ForeignCollection<Payment> payments;
 
 	@ForeignCollectionField(eager=false, orderAscending=true)
 	public ForeignCollection<Attendee> attendees;
-
-	// alarmId
 
 	public Payment getLastPayment() {
 		if (payments == null || payments.size() == 0) {
