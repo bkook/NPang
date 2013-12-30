@@ -140,10 +140,10 @@ public class AttendeeFragment extends SherlockFragment {
 		relationDao.delete(payment, attendee);
 		List<PayAttRelation> relations = null;
 		try {
-			relations = relationDao.queryForEq("attendee_id", attendee.id);
-			if (relations != null && relations.size() == 0) {
+            long count = relationDao.queryBuilder().setCountOf(true).where().eq("attendee_id", attendee.id).countOf();
+            if (count == 0) {
                 attendeeDao.deleteById(attendee.id);
-			}
+            }
 		} catch (SQLException e) {
 			Logger.e(e);
 			return;

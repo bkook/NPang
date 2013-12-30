@@ -46,8 +46,9 @@ import mobi.threeam.npang.database.dao.PaymentGroupDao;
 import mobi.threeam.npang.database.model.PayAttRelation;
 import mobi.threeam.npang.database.model.Payment;
 import mobi.threeam.npang.database.model.PaymentGroup;
-import mobi.threeam.npang.event.AmountChangedEvent;
+import mobi.threeam.npang.event.ChangeAmountEvent;
 import mobi.threeam.npang.event.ChangeAttendeesEvent;
+import mobi.threeam.npang.event.DeletePaymentEvent;
 import mobi.threeam.npang.event.SetPaymentGroupEvent;
 import mobi.threeam.npang.ui.activity.MainActivity;
 import mobi.threeam.npang.ui.view.PaymentItemView;
@@ -96,22 +97,21 @@ public class InputFragment extends SherlockFragment {
     long paymentGroupId;
 
 	PaymentGroup paymentGroup;
-	
+
+    static final int STATE_DEFAULT = 0;
+    static final int STATE_DETELE = 1;
+    int fragmentState = STATE_DEFAULT;
+
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		EventBus.getDefault().register(this);
-//		EventBus.getDefault().register(this, SetPaymentGroupEvent.class);
-//		EventBus.getDefault().register(this, AmountChangedEvent.class);
-//		EventBus.getDefault().register(this, ChangeAttendeesEvent.class);
 	}
 	
 	@Override
 	public void onDetach() {
 		EventBus.getDefault().unregister(this);
-//		EventBus.getDefault().unregister(this, SetPaymentGroupEvent.class);
-//		EventBus.getDefault().unregister(this, AmountChangedEvent.class);
-//		EventBus.getDefault().unregister(this, ChangeAttendeesEvent.class);
 		super.onDetach();
 	}
 
@@ -209,7 +209,7 @@ public class InputFragment extends SherlockFragment {
 		int index = paymentViewList.getChildCount();
 
 		view.setUpEventListener(getActivity(), index);
-		view.setUp(index, payment);
+		view.setUp(index, payment, paymentDao);
 		
 		paymentViewList.addView(view);	
 	}
@@ -238,9 +238,37 @@ public class InputFragment extends SherlockFragment {
 
 		TextViewUtils.currency(totalAmount, total);
 	}
-	
+
+    public void onEventMainThread(DeletePaymentEvent event) {
+        int count = paymentViewList.getChildCount();
+        boolean afterDeleted = false;
+        for (int i=0; i < count; i++ ) {
+            PaymentItemView holder = (PaymentItemView) paymentViewList.getChildAt(i);
+
+            Payment payment = holder.payment;
+            if (payment.id == event.payment.id) {
+                paymentViewList.removeView(holder);
+                afterDeleted = true;
+            }
+
+            if (afterDeleted) {
+                holder.place.setHint(i);
+            }
+        }
+
+        if (paymentViewList.getChildCount() == 1) {
+            setFragmentState(STATE_DEFAULT);
+        }
+
+        calcTotalAmount();
+    }
+
 	public void onEventMainThread(SetPaymentGroupEvent event) {
         save();
+
+        if (fragmentState != STATE_DEFAULT) {
+            setFragmentState(STATE_DEFAULT);
+        }
 
         FragmentManager fm = getFragmentManager();
         switch (event.group.state) {
@@ -259,7 +287,7 @@ public class InputFragment extends SherlockFragment {
         }
 	}
 	
-	public void onEventMainThread(AmountChangedEvent event) {
+	public void onEventMainThread(ChangeAmountEvent event) {
 		calcTotalAmount();
 	}
 	
@@ -301,7 +329,7 @@ public class InputFragment extends SherlockFragment {
 			i++;
 		}
 	}
-	
+
 	@UiThread
 	void refresh() {
 		if (paymentGroup == null) {
@@ -318,8 +346,8 @@ public class InputFragment extends SherlockFragment {
 		title.setText(paymentGroup.title);
 		title.setHint(TimeUtils.buildTitle(paymentGroup.createdAt));
 
-		// TODO 그룹 관련 셋팅 
-		// Payment 관련 셋팅 
+		// TODO 그룹 관련 셋팅
+		// Payment 관련 셋팅
 		if (paymentGroup.payments == null) {
 			paymentViewList.removeAllViews();
 			return;
@@ -335,14 +363,14 @@ public class InputFragment extends SherlockFragment {
 		for (int i=0; i < willBeRemoved; i++) {
 			removePaymentView();
 		}
-		
+
 		int i=0;
 		for (Payment payment : paymentGroup.payments) {
 			PaymentItemView holder = (PaymentItemView) paymentViewList.getChildAt(i);
-			holder.setUp(i, payment);
+			holder.setUp(i, payment, paymentDao);
 			i++;
 		}
-		
+
 		SpinnerAdapter adapter = bankNameSpinner.getAdapter();
 		for (i=0 ; i < adapter.getCount(); i++) {
 			String bankName = (String) adapter.getItem(i);
@@ -354,7 +382,7 @@ public class InputFragment extends SherlockFragment {
 
 		accountNumber.setText(paymentGroup.bankAccount);
 	}
-	
+
 	boolean isValid() {
 		for (Payment payment: paymentGroup.payments) {
 			Logger.i("payment " + payment.amount + " " + payment.attendees.size());
@@ -367,10 +395,31 @@ public class InputFragment extends SherlockFragment {
 		}
 		return true;
 	}
-	
+
+    void setFragmentState(int state) {
+        fragmentState = state;
+
+        for (int i=0; i < paymentViewList.getChildCount(); i++) {
+            PaymentItemView itemView = (PaymentItemView) paymentViewList.getChildAt(i);
+            itemView.showDeleteView(fragmentState == STATE_DETELE);
+        }
+    }
+
+    @OptionsItem(R.id.action_delete)
+	void menuActionDelete() {
+        save();
+        if (paymentViewList.getChildCount() == 1) {
+            Notifier.toast(R.string.account_info);
+            return;
+        }
+
+        setFragmentState(fragmentState == STATE_DEFAULT ? STATE_DETELE : STATE_DEFAULT);
+    }
+
 	@OptionsItem(R.id.action_calculate)
 	void menuActionCalculate() {
 		save();
+
 		if ( ! isValid()) {
 			return;
 		}

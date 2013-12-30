@@ -24,7 +24,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.actionbarsherlock.widget.ShareActionProvider.OnShareTargetSelectedListener;
 import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.FragmentArg;
@@ -176,10 +175,13 @@ public class ReceiptFragment extends SherlockFragment {
         setAlarmAreaEnabled(event.group.alarmEnabled);
     }
 
-    @Background
 	void loadPaymentGroup() {
 		try {
 			paymentGroup = paymentGroupDao.queryForId(paymentGroupId);
+            Logger.e("paymentGroup " + paymentGroup);
+            if (paymentGroup == null) {
+                throw new RuntimeException();
+            }
 		} catch (SQLException e) {
 			Logger.e(e);
 		}
@@ -367,6 +369,7 @@ public class ReceiptFragment extends SherlockFragment {
 	}
 
     private String makeReceiptText() {
+        Logger.e("paymentgroup000 " + paymentGroup);
          StringBuilder builder = new StringBuilder();
         builder.append("[").append(TextViewUtils.title(paymentGroup)).append("]").append("\r\n\r\n");
 
@@ -386,6 +389,7 @@ public class ReceiptFragment extends SherlockFragment {
     }
 
     private void fillAttendees(StringBuilder builder) {
+        builder.append(getString(R.string.receipt_format_title, getString(R.string.by_attendee)));
         builder.append(getString(R.string.receipt_format_title, getString(R.string.by_attendee)));
 
         List<Attendee> attendees = null;
@@ -419,6 +423,8 @@ public class ReceiptFragment extends SherlockFragment {
             if (attendee.paidAt != null) {
                 resId = R.string.receipt_format_item_attendee_checked;
             }
+            Logger.i("attendee1 " + attendee.id);
+            Logger.i("attendee2 " + map);
             builder.append(getString(resId, attendee.name, CurrencyUtils.format(map.get(attendee.id))));
             i++;
         }
