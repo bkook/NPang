@@ -19,6 +19,11 @@ public class TimeUtils {
 		return formatter.format(time);
 	}
 
+    public static final SimpleDateFormat timeFormatter = new SimpleDateFormat("h:m a");
+    public static String timeFormat(Date time) {
+        return timeFormatter.format(time);
+    }
+
 //	public static String format(long time) {
 //		return formatter.format(new Date(time));
 //	}

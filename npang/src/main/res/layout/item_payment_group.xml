@@ -1,6 +1,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <RelativeLayout
+        android:id="@+id/container"
         android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >

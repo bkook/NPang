@@ -7,6 +7,7 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import mobi.threeam.npang.database.dao.PaymentGroupDao;
 
@@ -57,6 +58,19 @@ public class PaymentGroup {
 	@ForeignCollectionField(eager=false, orderAscending=true)
 	public ForeignCollection<Attendee> attendees;
 
+    public Date getNextAlarmTime() {
+        Date now = new Date();
+        long repeatTerm = TimeUnit.DAYS.toMillis(alarmPeriod);
+        Date targetTime = new Date(alarmTime.getTime() + repeatTerm);
+        if (targetTime.before(now)) {
+            long nowInMillis = now.getTime();
+            long gap = (nowInMillis - targetTime.getTime());
+            targetTime = new Date(nowInMillis + (repeatTerm - (gap % repeatTerm)));
+        }
+
+        return targetTime;
+    }
+
 	public Payment getLastPayment() {
 		if (payments == null || payments.size() == 0) {
 			return null;
@@ -67,4 +81,5 @@ public class PaymentGroup {
 		}
 		return lastPayment;
 	}
+
 }

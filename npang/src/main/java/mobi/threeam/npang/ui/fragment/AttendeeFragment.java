@@ -129,7 +129,7 @@ public class AttendeeFragment extends SherlockFragment {
 
 		attendeeAdapter.setData(attendees);
 	}
-	
+
 	@ItemClick
 	void attendeeListviewItemClicked(int position) {
 		Attendee attendee = attendeeAdapter.getItem(position);
@@ -140,7 +140,7 @@ public class AttendeeFragment extends SherlockFragment {
 		relationDao.delete(payment, attendee);
 		List<PayAttRelation> relations = null;
 		try {
-            long count = relationDao.queryBuilder().setCountOf(true).where().eq("attendee_id", attendee.id).countOf();
+            long count = relationDao.queryBuilder().where().eq("attendee_id", attendee.id).countOf();
             if (count == 0) {
                 attendeeDao.deleteById(attendee.id);
             }

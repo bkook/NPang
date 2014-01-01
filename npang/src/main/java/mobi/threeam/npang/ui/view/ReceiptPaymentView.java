@@ -9,6 +9,7 @@ import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.ViewById;
 
 import mobi.threeam.npang.R;
+import mobi.threeam.npang.common.CurrencyUtils;
 import mobi.threeam.npang.common.TextViewUtils;
 import mobi.threeam.npang.database.model.Payment;
 
@@ -40,7 +41,7 @@ public class ReceiptPaymentView extends RelativeLayout {
 		int attendeeCount = payment.attendees.size();
 
         TextViewUtils.place(place, index, payment.place);
-        description.setText(String.format("%s ÷ %d", payment.amount, attendeeCount));
+        description.setText(String.format("%s ÷ %d", CurrencyUtils.format(payment.amount), attendeeCount));
         TextViewUtils.currency(amount, payment.amount / attendeeCount);
 	}
 }

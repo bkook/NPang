@@ -21,7 +21,6 @@
 
         <Button
             android:id="@+id/alarm_time"
-            android:text="12:12 am"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -51,12 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="20dp"
+            android:gravity="top"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/test"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -154,12 +149,14 @@
                     <TextView
                         android:id="@+id/bank_name"
                         android:layout_width="0dp"
+                        android:gravity="center"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"/>
 
                     <TextView
                         android:id="@+id/bank_account"
                         android:layout_width="0dp"
+                        android:gravity="center"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"/>
                 </LinearLayout>

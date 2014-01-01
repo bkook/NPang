@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
 
@@ -41,7 +42,9 @@ public class PaymentGroupDao extends BaseDaoImpl<PaymentGroup, Long> {
 		group.createdAt = new Date();
 		group.locale = Locale.getDefault().toString();
 		group.totalAmount = 0;
+        group.alarmEnabled = true;
         group.alarmTime = new Date();
+        group.alarmPeriod = 3;
 		group.state = PaymentGroup.STATE_NONE;
 		
 		create(group);
@@ -73,4 +76,38 @@ public class PaymentGroupDao extends BaseDaoImpl<PaymentGroup, Long> {
             Logger.e(e);
         }
     }
+
+    public PaymentGroup getNextAlarm() {
+        List<PaymentGroup> paymentGroupList = null;
+        QueryBuilder<PaymentGroup, Long> builder = queryBuilder();
+        Where<PaymentGroup, Long> where = builder.where();
+        try {
+            where.eq("completed", false).and().eq("alarmEnabled", true).and().eq("state", PaymentGroup.STATE_CALCULATED);
+            paymentGroupList = builder.query();
+        } catch (SQLException e) {
+            Logger.e(e);
+        }
+
+        if (paymentGroupList == null || paymentGroupList.size() == 0) {
+            return null;
+        }
+
+        PaymentGroup nextPaymentGroup = null;
+        Date nextAlarmTime = null;
+        for (PaymentGroup group : paymentGroupList) {
+            Date alarmTime = group.getNextAlarmTime();
+            if (nextAlarmTime == null) {
+                nextAlarmTime = alarmTime;
+                nextPaymentGroup = group;
+                continue;
+            }
+            if (alarmTime.before(nextAlarmTime)) {
+                nextAlarmTime = alarmTime;
+                nextPaymentGroup = group;
+                continue;
+            }
+        }
+        return nextPaymentGroup;
+    }
+
 }

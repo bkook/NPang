@@ -1,5 +1,7 @@
 package mobi.threeam.npang.common;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.view.View;
 
 import com.nineoldandroids.view.ViewHelper;
@@ -17,4 +19,15 @@ public class AnimUtils {
 		ViewHelper.setScaleX(view, 0);
 		view.animate().translationY(0).alpha(1).scaleX(1);
 	}
+
+    public static void fadeOut(final View view, final AnimatorListenerAdapter listener) {
+        view.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                listener.onAnimationEnd(animation);
+                view.setAlpha(1f);
+            }
+        });
+
+    }
 }

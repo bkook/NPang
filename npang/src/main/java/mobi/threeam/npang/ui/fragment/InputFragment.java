@@ -18,6 +18,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.FragmentArg;
@@ -34,6 +35,7 @@ import java.sql.SQLException;
 
 import de.greenrobot.event.EventBus;
 import mobi.threeam.npang.R;
+import mobi.threeam.npang.common.AlarmUtils;
 import mobi.threeam.npang.common.Logger;
 import mobi.threeam.npang.common.NPangPreference_;
 import mobi.threeam.npang.common.Notifier;
@@ -62,6 +64,9 @@ public class InputFragment extends SherlockFragment {
 
 	@Pref
 	NPangPreference_ prefs;
+
+    @Bean
+    AlarmUtils alarmUtils;
 
 	@SystemService
 	LayoutInflater inflater;
@@ -419,6 +424,7 @@ public class InputFragment extends SherlockFragment {
 	@OptionsItem(R.id.action_calculate)
 	void menuActionCalculate() {
 		save();
+        alarmUtils.refresh();
 
 		if ( ! isValid()) {
 			return;
@@ -433,4 +439,5 @@ public class InputFragment extends SherlockFragment {
 		ft.replace(R.id.contents, fragment);
 		ft.commit();
 	}
+
 }

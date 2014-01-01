@@ -7,11 +7,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.EViewGroup;
+import com.googlecode.androidannotations.annotations.OrmLiteDao;
 import com.googlecode.androidannotations.annotations.ViewById;
 
 import mobi.threeam.npang.R;
 import mobi.threeam.npang.common.TextViewUtils;
 import mobi.threeam.npang.common.TimeUtils;
+import mobi.threeam.npang.database.DBHelper;
+import mobi.threeam.npang.database.dao.PaymentGroupDao;
 import mobi.threeam.npang.database.model.Payment;
 import mobi.threeam.npang.database.model.PaymentGroup;
 
@@ -26,6 +29,9 @@ public class PaymentGroupItemView extends RelativeLayout {
 
 	@ViewById
 	TextView date;
+
+    @OrmLiteDao(helper = DBHelper.class, model = PaymentGroup.class)
+    PaymentGroupDao paymentGroupDao;
 
 	public PaymentGroupItemView(Context context) {
 		super(context);
@@ -54,4 +60,8 @@ public class PaymentGroupItemView extends RelativeLayout {
         amount.setVisibility(showAmount ? View.VISIBLE : View.INVISIBLE);
 	}
 
+//    @LongClick
+//    public void container(View view) {
+//        Toast.makeText(getContext(), "aaa", Toast.LENGTH_SHORT).show();
+//    }
 }

@@ -12,13 +12,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
-import com.googlecode.androidannotations.annotations.OrmLiteDao;
 import com.googlecode.androidannotations.annotations.SystemService;
 
 import mobi.threeam.npang.R;
-import mobi.threeam.npang.database.DBHelper;
-import mobi.threeam.npang.database.dao.PaymentGroupDao;
-import mobi.threeam.npang.database.model.PaymentGroup;
 import mobi.threeam.npang.ui.fragment.AttendeeFragment_;
 
 @EActivity(R.layout.activity_attendees)
@@ -28,8 +24,6 @@ public class AttendeesActivity extends SherlockFragmentActivity {
 	@SystemService
 	LayoutInflater inflater;
 	
-	@OrmLiteDao(helper=DBHelper.class, model=PaymentGroup.class)
-	PaymentGroupDao paymentGroupDao;
 
 	@Extra
 	long paymentId;

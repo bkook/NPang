@@ -6,6 +6,7 @@
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -31,6 +32,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="mobi.threeam.android.npang.ui.activity.MainActivity_" />
         </activity>
+
+        <receiver android:name=".receiver.AlarmReceiver_"></receiver>
+
+        <receiver android:name=".receiver.RestartReceiver_" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

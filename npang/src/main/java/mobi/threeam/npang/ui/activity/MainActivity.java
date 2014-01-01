@@ -1,5 +1,9 @@
 package mobi.threeam.npang.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -14,22 +18,32 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ItemClick;
+import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OrmLiteDao;
 import com.googlecode.androidannotations.annotations.SystemService;
+import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import mobi.threeam.npang.R;
+import mobi.threeam.npang.common.AnimUtils;
 import mobi.threeam.npang.common.Logger;
 import mobi.threeam.npang.database.DBHelper;
+import mobi.threeam.npang.database.dao.AttendeeDao;
+import mobi.threeam.npang.database.dao.PayAttRelationDao;
 import mobi.threeam.npang.database.dao.PaymentDao;
 import mobi.threeam.npang.database.dao.PaymentGroupDao;
+import mobi.threeam.npang.database.model.Attendee;
+import mobi.threeam.npang.database.model.PayAttRelation;
 import mobi.threeam.npang.database.model.Payment;
 import mobi.threeam.npang.database.model.PaymentGroup;
 import mobi.threeam.npang.event.CreatePaymentGroupEvent;
@@ -45,13 +59,18 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 	
 	@SystemService
 	LayoutInflater inflater;
-	
+
+    @OrmLiteDao(helper=DBHelper.class, model=Attendee.class)
+    AttendeeDao attendeeDao;
+
+    @OrmLiteDao(helper=DBHelper.class, model=PayAttRelation.class)
+    PayAttRelationDao relationDao;
+
 	@OrmLiteDao(helper=DBHelper.class, model=PaymentGroup.class)
 	PaymentGroupDao paymentGroupDao;
 
 	@OrmLiteDao(helper=DBHelper.class, model=Payment.class)
 	PaymentDao paymentDao;
-	
 
     @ViewById
 	DrawerLayout drawerLayout;
@@ -119,6 +138,8 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 	
 	@AfterViews
 	void bindDrawer() {
+
+
 		getSupportActionBar().setNavigationMode(
 				ActionBar.NAVIGATION_MODE_STANDARD);
 		getSupportActionBar().setHomeButtonEnabled(true);
@@ -182,6 +203,74 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 		EventBus.getDefault().post(new SetPaymentGroupEvent(group));
 		drawerLayout.closeDrawers();
 	}
+
+    <T> void deleteByPaymentGroup(Dao<T, Long> dao, PaymentGroup group) {
+        DeleteBuilder<T, Long> builder = dao.deleteBuilder();
+        try {
+            builder.where().eq("paymentGroup_id", group.id);
+            dao.delete(builder.prepare());
+        } catch (SQLException e) {
+            Logger.e(e);
+        }
+    }
+
+    @Background
+    void deletePaymentGroup(PaymentGroup group) {
+        try {
+            deleteByPaymentGroup(relationDao, group);
+            deleteByPaymentGroup(paymentDao, group);
+            deleteByPaymentGroup(attendeeDao, group);
+            paymentGroupDao.delete(group);
+
+            List<PaymentGroup> paymentGroups = paymentGroupDao.queryForAllSorted();
+            setUpListview(paymentGroups);
+            EventBus.getDefault().post(new SetPaymentGroupEvent(paymentGroups.get(0)));
+        } catch (SQLException e) {
+            Logger.e(e);
+        }
+    }
+
+    @UiThread
+    void setUpListview(List<PaymentGroup> paymentGroups) {
+        adapter.setData(paymentGroups);
+    }
+
+    @ItemLongClick
+    public void drawerListviewItemLongClicked(final int position) {
+        if (adapter.getCount() == 1) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.delete)
+                .setMessage(R.string.delete_desc)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ListView drawerListView = (ListView) drawer.findViewById(R.id.drawer_listview);
+                        int headerViewsCount = drawerListView.getHeaderViewsCount();
+
+                        final PaymentGroup group = adapter.getItem(position - headerViewsCount);
+
+                        int firstPosition = drawerListView.getFirstVisiblePosition();
+                        int lastPosition = drawerListView.getLastVisiblePosition();
+
+                        if (firstPosition <= position && lastPosition >= position) {
+                            int selectedIndex = position - firstPosition;
+                            final View view = drawerListView.getChildAt(selectedIndex);
+                            AnimUtils.fadeOut(view, new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    deletePaymentGroup(group);
+                                    view.setAlpha(1);
+                                }
+                            });
+                        } else {
+                            deletePaymentGroup(group);
+                        }
+                    }
+                }).setNegativeButton(android.R.string.cancel, null).show();
+    }
 
     @Override
     public void onBackPressed() {

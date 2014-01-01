@@ -19,6 +19,7 @@
     <string name="items">항목별</string>
     <string name="delete_vertical">삭\n제</string>
     <string name="delete">삭제</string>
+    <string name="delete_desc">정말 삭제하시겠습니까?</string>
     <string name="by_attendee">참석자별</string>
     <string name="attendee_count">%d명</string>
     <string name="add_attendee">추가</string>
@@ -32,7 +33,10 @@
     <string-array name="alarm_period">
         <item>매일</item>
         <item>격일로</item>
-        <item>3일마다</item>
+        <item>사흘마다</item>
+        <item>4일마다</item>
+        <item>5일마다</item>
+        <item>6일마다</item>
         <item>일주일마다</item>
     </string-array>
 

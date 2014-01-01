@@ -7,7 +7,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -24,6 +27,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.actionbarsherlock.widget.ShareActionProvider.OnShareTargetSelectedListener;
 import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.FragmentArg;
@@ -38,15 +42,14 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.sql.SQLException;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import mobi.threeam.npang.R;
+import mobi.threeam.npang.common.AlarmUtils;
 import mobi.threeam.npang.common.CurrencyUtils;
 import mobi.threeam.npang.common.Logger;
 import mobi.threeam.npang.common.NPangPreference_;
@@ -78,6 +81,12 @@ public class ReceiptFragment extends SherlockFragment {
 
 	@SystemService
 	LayoutInflater inflater;
+
+    @SystemService
+    InputMethodManager inputMethodManager;
+
+    @Bean
+    AlarmUtils alarmUtils;
 
 	@ViewById
 	TextView title;
@@ -126,6 +135,7 @@ public class ReceiptFragment extends SherlockFragment {
 
 	PaymentGroup paymentGroup;
 
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -140,7 +150,9 @@ public class ReceiptFragment extends SherlockFragment {
 
 	@AfterViews
 	void afterViews() {
-		configureActionBar();
+        inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+
+        configureActionBar();
 
 		loadPaymentGroup();
 	}
@@ -178,7 +190,6 @@ public class ReceiptFragment extends SherlockFragment {
 	void loadPaymentGroup() {
 		try {
 			paymentGroup = paymentGroupDao.queryForId(paymentGroupId);
-            Logger.e("paymentGroup " + paymentGroup);
             if (paymentGroup == null) {
                 throw new RuntimeException();
             }
@@ -220,12 +231,28 @@ public class ReceiptFragment extends SherlockFragment {
 	}
 
     void setUpAlarm() {
-        alarmPeriod.setSelection(1);
+        alarmPeriod.setSelection(paymentGroup.alarmPeriod - 1);
+
+        alarmPeriod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                paymentGroup.alarmPeriod = i + 1;
+                try {
+                    paymentGroupDao.update(paymentGroup);
+                    alarmUtils.refresh();
+                } catch (SQLException e) {
+                    Logger.e(e);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(paymentGroup.alarmTime);
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("h:m a");
-        alarmTime.setText(dateFormatter.format(paymentGroup.alarmTime));
+        alarmTime.setText(TimeUtils.timeFormat(paymentGroup.alarmTime));
 
         setAlarmAreaEnabled(paymentGroup.alarmEnabled);
         alarmToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -234,6 +261,7 @@ public class ReceiptFragment extends SherlockFragment {
                 paymentGroup.alarmEnabled = isChecked;
                 try {
                     paymentGroupDao.update(paymentGroup);
+                    alarmUtils.refresh();
                 } catch (SQLException e) {
                     Logger.e(e);
                 }
@@ -249,12 +277,29 @@ public class ReceiptFragment extends SherlockFragment {
 
     @Click
     void alarmTimeClicked() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(paymentGroup.alarmTime);
+        int hour = cal.get(Calendar.HOUR);
+        int min = cal.get(Calendar.MINUTE);
+
         new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int min) {
-                paymentGroup.alarmTime = new Date();
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.HOUR, hour);
+                cal.set(Calendar.MINUTE, min);
+
+                alarmTime.setText(TimeUtils.timeFormat(paymentGroup.alarmTime));
+
+                paymentGroup.alarmTime = cal.getTime();
+                try {
+                    paymentGroupDao.update(paymentGroup);
+                    alarmUtils.refresh();
+                } catch (SQLException e) {
+                    Logger.e(e);
+                }
             }
-        }, 11, 11, false).show();
+        }, hour, min, false).show();
     }
 
 	void setUpAttendees() {
@@ -339,6 +384,8 @@ public class ReceiptFragment extends SherlockFragment {
 	@OptionsItem(R.id.action_input)
 	void menuActionInput() {
         paymentGroupDao.setPaymentGroupState(paymentGroup, PaymentGroup.STATE_NONE);
+
+        alarmUtils.refresh();
 
 		InputFragment fragment = InputFragment_.builder().paymentGroupId(paymentGroup.id).build();
 
