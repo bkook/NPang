@@ -1,14 +1,14 @@
 package mobi.threeam.npang.ui.activity;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
@@ -18,7 +18,7 @@ import mobi.threeam.npang.R;
 import mobi.threeam.npang.ui.fragment.AttendeeFragment_;
 
 @EActivity(R.layout.activity_attendees)
-public class AttendeesActivity extends SherlockFragmentActivity {
+public class AttendeesActivity extends Activity {
 	private static final String FRAG_TAG = "frag";
 	
 	@SystemService
@@ -32,7 +32,7 @@ public class AttendeesActivity extends SherlockFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		FragmentManager fm = getSupportFragmentManager();
+		FragmentManager fm = getFragmentManager();
 		if (fm.findFragmentByTag(FRAG_TAG) == null) {
 			FragmentTransaction ft = fm.beginTransaction();
 
@@ -62,10 +62,10 @@ public class AttendeesActivity extends SherlockFragmentActivity {
 	
 	@AfterViews
 	void bindDrawer() {
-		getSupportActionBar().setNavigationMode(
+		getActionBar().setNavigationMode(
 				ActionBar.NAVIGATION_MODE_STANDARD);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
 	@Override

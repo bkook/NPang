@@ -1,20 +1,21 @@
 <resources>
 
-    <style name="AppBaseTheme" parent="Theme.Sherlock">
+    <style name="AppBaseTheme" parent="android:Theme.Light">
     </style>
 
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:actionBarStyle">@style/NPangActionBar</item>
     </style>
 
-    <style name="NPangActionBar" parent="Widget.Sherlock.ActionBar">
+    <style name="NPangActionBar" parent="android:Widget.ActionBar">
         <item name="android:background">#f46a10</item>
         <item name="android:titleTextStyle">@style/NPangTitleStyle</item>
     </style>
 
-    <style name="NPangTitleStyle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
+    <style name="NPangTitleStyle" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
+
     </style>
 
 </resources>

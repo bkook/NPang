@@ -1,12 +1,17 @@
 package mobi.threeam.npang.ui.fragment;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -14,16 +19,12 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ShareActionProvider;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
@@ -70,7 +71,7 @@ import mobi.threeam.npang.ui.view.ReceiptPaymentView_;
 
 @OptionsMenu(R.menu.receipt)
 @EFragment(R.layout.fragment_receipt)
-public class ReceiptFragment extends SherlockFragment {
+public class ReceiptFragment extends Fragment {
 
 	@Pref
 	NPangPreference_ prefs;
@@ -154,9 +155,19 @@ public class ReceiptFragment extends SherlockFragment {
 	}
 
     @Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+	    MenuItem item = menu.findItem(R.id.action_share);
+
+        final Intent intent = buildShareIntent();
+	    ShareActionProvider shareActionProvider = (ShareActionProvider) item.getActionProvider();
+	    shareActionProvider.setShareIntent(intent);
+	}
+
+    @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        boolean enabled = ! ((MainActivity)getSherlockActivity()).isDrawerOpened();
+        boolean enabled = ! ((MainActivity)getActivity()).isDrawerOpened();
         for (int i=0; i < menu.size(); i++) {
             menu.getItem(i).setEnabled(enabled);
         }
@@ -371,7 +382,7 @@ public class ReceiptFragment extends SherlockFragment {
 	}
 
 	void configureActionBar() {
-		ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+		ActionBar actionBar = getActivity().getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -393,24 +404,6 @@ public class ReceiptFragment extends SherlockFragment {
 	}
 
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-	    MenuItem item = menu.findItem(R.id.action_share);
-
-//	    Intent intent = buildShareIntent();
-//	    ShareActionProvider shareActionProvider = (ShareActionProvider) item.getActionProvider();
-//	    shareActionProvider.setShareHistoryFileName(null);
-//	    shareActionProvider.setShareIntent(intent);
-//	    shareActionProvider.setOnShareTargetSelectedListener(new OnShareTargetSelectedListener() {
-//			@Override
-//			public boolean onShareTargetSelected(ShareActionProvider source,
-//					Intent intent) {
-//				startActivity(intent);
-//				return true;
-//			}
-//		});
-	}
 
     private String makeReceiptText() {
         StringBuilder builder = new StringBuilder();

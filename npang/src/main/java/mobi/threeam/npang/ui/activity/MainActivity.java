@@ -2,21 +2,21 @@ package mobi.threeam.npang.ui.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -56,7 +56,7 @@ import mobi.threeam.npang.ui.fragment.InputFragment_;
 import mobi.threeam.npang.ui.fragment.ReceiptFragment_;
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends SherlockFragmentActivity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener {
 	private static final String FRAG_TAG = "frag";
 	
 	@SystemService
@@ -93,7 +93,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		FragmentManager fm = getSupportFragmentManager();
+		FragmentManager fm = getFragmentManager();
 		if (fm.findFragmentByTag(FRAG_TAG) == null) {
 
 			FragmentTransaction ft = fm.beginTransaction();
@@ -155,10 +155,10 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 	void bindDrawer() {
 
 
-		getSupportActionBar().setNavigationMode(
+		getActionBar().setNavigationMode(
 				ActionBar.NAVIGATION_MODE_STANDARD);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		if (drawerLayout == null) {
@@ -185,13 +185,13 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
                 adapter.notifyDataSetChanged();
-                supportInvalidateOptionsMenu();
+                invalidateOptionsMenu();
 			}
 
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
                 adapter.notifyDataSetChanged();
-                supportInvalidateOptionsMenu();
+                invalidateOptionsMenu();
 			}
 
 			@Override

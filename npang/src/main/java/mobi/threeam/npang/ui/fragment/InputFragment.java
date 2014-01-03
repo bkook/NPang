@@ -1,10 +1,12 @@
 package mobi.threeam.npang.ui.fragment;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Handler;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.widget.ArrayAdapter;
@@ -14,8 +16,6 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Bean;
@@ -59,7 +59,7 @@ import mobi.threeam.npang.ui.view.PaymentItemView_;
 
 @OptionsMenu(R.menu.input)
 @EFragment(R.layout.fragment_input)
-public class InputFragment extends SherlockFragment {
+public class InputFragment extends Fragment {
 
 	Handler handler = new Handler();
 
@@ -123,7 +123,7 @@ public class InputFragment extends SherlockFragment {
 
 	@AfterViews
 	void afterViews() {
-        getSherlockActivity().getSupportActionBar().setTitle(R.string.title_input);
+        getActivity().getActionBar().setTitle(R.string.title_input);
 
 		String[] bankNameArray = getResources().getStringArray(R.array.banks);
 		ArrayAdapter<String> bankNameAdapter = new ArrayAdapter<String>(
@@ -168,7 +168,7 @@ public class InputFragment extends SherlockFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        boolean enabled = ! ((MainActivity)getSherlockActivity()).isDrawerOpened();
+        boolean enabled = ! ((MainActivity)getActivity()).isDrawerOpened();
         for (int i=0; i < menu.size(); i++) {
             menu.getItem(i).setEnabled(enabled);
         }

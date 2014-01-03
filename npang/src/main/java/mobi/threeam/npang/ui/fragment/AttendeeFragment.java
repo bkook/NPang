@@ -1,12 +1,14 @@
 package mobi.threeam.npang.ui.fragment;
 
+import android.app.Fragment;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
@@ -45,7 +47,7 @@ import mobi.threeam.npang.ui.adapter.AttendeeAdapter;
 import mobi.threeam.npang.ui.adapter.ContactAdapter;
 
 @EFragment(R.layout.fragment_attendee)
-public class AttendeeFragment extends SherlockFragment {
+public class AttendeeFragment extends Fragment {
 
 	@Pref
 	NPangPreference_ prefs;
@@ -95,7 +97,7 @@ public class AttendeeFragment extends SherlockFragment {
 
 	@AfterViews
 	void afterViews() {
-        getSherlockActivity().getSupportActionBar().setTitle(R.string.attendee);
+        getActivity().getActionBar().setTitle(R.string.attendee);
 		List<Contact> contacts = contactsLoader.getAll();
 
 		contactAdapter.setData(contacts);
@@ -130,6 +132,23 @@ public class AttendeeFragment extends SherlockFragment {
 		}
 
 		attendeeAdapter.setData(attendees);
+
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                contactAdapter.getFilter().filter(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 	}
 
 	@ItemClick
