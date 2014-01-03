@@ -264,7 +264,7 @@ public class InputFragment extends Fragment {
             }
 
             if (afterDeleted) {
-                holder.place.setHint(i);
+                holder.setPlaceHint(i+1);
             }
         }
 
@@ -419,7 +419,7 @@ public class InputFragment extends Fragment {
 	void menuActionDelete() {
         save();
         if (paymentViewList.getChildCount() == 1) {
-            Notifier.toast(R.string.account_info);
+            Notifier.toast(R.string.msg_more_than_one);
             return;
         }
 

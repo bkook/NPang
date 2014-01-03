@@ -38,6 +38,7 @@ import de.greenrobot.event.EventBus;
 import mobi.threeam.npang.R;
 import mobi.threeam.npang.common.AnimUtils;
 import mobi.threeam.npang.common.Logger;
+import mobi.threeam.npang.common.Notifier;
 import mobi.threeam.npang.database.DBHelper;
 import mobi.threeam.npang.database.dao.AttendeeDao;
 import mobi.threeam.npang.database.dao.PayAttRelationDao;
@@ -253,6 +254,7 @@ public class MainActivity extends Activity implements OnClickListener {
     @ItemLongClick
     public void drawerListviewItemLongClicked(final int position) {
         if (adapter.getCount() == 1) {
+            Notifier.toast(R.string.msg_more_than_one);
             return;
         }
 
