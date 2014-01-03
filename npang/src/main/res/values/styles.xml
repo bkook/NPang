@@ -15,7 +15,6 @@
     <style name="NPangTitleStyle" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
-
     </style>
 
 </resources>
