@@ -396,7 +396,6 @@ public class InputFragment extends Fragment {
 
 	boolean isValid() {
 		for (Payment payment: paymentGroup.payments) {
-			Logger.i("payment " + payment.amount + " " + payment.attendees.size());
 			if (payment.amount <= 0) {
 				return false;
 			}

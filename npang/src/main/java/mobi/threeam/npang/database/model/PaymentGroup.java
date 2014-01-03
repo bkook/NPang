@@ -68,8 +68,7 @@ public class PaymentGroup {
             targetTime = new Date(nowInMillis + (repeatTerm - (gap % repeatTerm)));
         }
 
-        return new Date(System.currentTimeMillis() + 1000*30);
-//        return targetTime;
+        return targetTime;
     }
 
 	public Payment getLastPayment() {

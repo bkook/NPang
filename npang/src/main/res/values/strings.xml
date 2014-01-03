@@ -33,7 +33,7 @@
     <string name="msg_fill_in_the_blanks">금액과 참석자를 채워주세요.</string>
     <string name="msg_already_exist_attendee">이미 등록된 참석자입니다.</string>
     <string name="msg_unknown_error">오류가 발생하였습니다. ㅈㅅㅈㅅ</string>
-    <string name="title_input">등록</string>
+    <string name="title_input">입력</string>
     <string name="title_receipt">정산</string>
     <string name="title_attendee">참석자</string>
 

@@ -75,11 +75,9 @@ dependencies {
     compile "com.googlecode.androidannotations:androidannotations-api:${androidAnnotationsVersion}"
 
     compile 'com.android.support:support-v4:19.0.0'
-//    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'ch.acra:acra:4.5.0'
     compile 'de.greenrobot:eventbus:2.2.0'
     compile 'com.j256.ormlite:ormlite-android:4.47'
-//    compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'
     compile 'com.nhaarman.listviewanimations:library:2.5.2'
 

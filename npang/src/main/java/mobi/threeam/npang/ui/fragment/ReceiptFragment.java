@@ -293,7 +293,7 @@ public class ReceiptFragment extends Fragment {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int min) {
                 Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.HOUR, hour);
+                cal.set(Calendar.HOUR_OF_DAY, hour);
                 cal.set(Calendar.MINUTE, min);
 
                 alarmTime.setText(TimeUtils.timeFormat(paymentGroup.alarmTime));
@@ -415,7 +415,7 @@ public class ReceiptFragment extends Fragment {
 
         // bank
         builder.append(getString(R.string.receipt_format_title, getString(R.string.account_info)))
-                .append(paymentGroup.bankName).append(paymentGroup.bankAccount).append("\r\n")
+                .append(paymentGroup.bankName).append(" ").append(paymentGroup.bankAccount).append("\r\n")
                 .append("\r\n");
 
         // payments
