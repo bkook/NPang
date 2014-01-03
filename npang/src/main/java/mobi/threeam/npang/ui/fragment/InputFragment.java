@@ -51,6 +51,7 @@ import mobi.threeam.npang.database.model.PaymentGroup;
 import mobi.threeam.npang.event.ChangeAmountEvent;
 import mobi.threeam.npang.event.ChangeAttendeesEvent;
 import mobi.threeam.npang.event.DeletePaymentEvent;
+import mobi.threeam.npang.event.OpenDrawerEvent;
 import mobi.threeam.npang.event.SetPaymentGroupEvent;
 import mobi.threeam.npang.ui.activity.MainActivity;
 import mobi.threeam.npang.ui.view.PaymentItemView;
@@ -122,6 +123,8 @@ public class InputFragment extends SherlockFragment {
 
 	@AfterViews
 	void afterViews() {
+        getSherlockActivity().getSupportActionBar().setTitle(R.string.title_input);
+
 		String[] bankNameArray = getResources().getStringArray(R.array.banks);
 		ArrayAdapter<String> bankNameAdapter = new ArrayAdapter<String>(
 				getActivity(), android.R.layout.simple_spinner_item,
@@ -184,10 +187,10 @@ public class InputFragment extends SherlockFragment {
 			int lastIndex = paymentViewList.getChildCount() - 1;
 			PaymentItemView view = (PaymentItemView) paymentViewList.getChildAt(lastIndex);
 			lastPayment = view.payment;
-			if (view.amount.getNumber().intValue() == 0) {
-				Notifier.toast("empty"); // TODO 
-				return;
-			}
+//			if (view.amount.getNumber().intValue() == 0) {
+//				Notifier.toast(R.string.
+//				return;
+//			}
 		}
 
 		try {
@@ -243,6 +246,10 @@ public class InputFragment extends SherlockFragment {
 
 		TextViewUtils.currency(totalAmount, total);
 	}
+
+    public void onEventMainThread(OpenDrawerEvent event) {
+        save();
+    }
 
     public void onEventMainThread(DeletePaymentEvent event) {
         int count = paymentViewList.getChildCount();
@@ -338,7 +345,7 @@ public class InputFragment extends SherlockFragment {
 	@UiThread
 	void refresh() {
 		if (paymentGroup == null) {
-			Notifier.toast("null");
+            Notifier.toast(R.string.msg_unknown_error);
 			return;
 		}
 
@@ -351,7 +358,6 @@ public class InputFragment extends SherlockFragment {
 		title.setText(paymentGroup.title);
 		title.setHint(TimeUtils.buildTitle(paymentGroup.createdAt));
 
-		// TODO 그룹 관련 셋팅
 		// Payment 관련 셋팅
 		if (paymentGroup.payments == null) {
 			paymentViewList.removeAllViews();
@@ -427,6 +433,7 @@ public class InputFragment extends SherlockFragment {
         alarmUtils.refresh();
 
 		if ( ! isValid()) {
+            Notifier.toast(R.string.msg_fill_in_the_blanks);
 			return;
 		}
 

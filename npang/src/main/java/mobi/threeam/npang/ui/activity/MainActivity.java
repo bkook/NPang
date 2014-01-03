@@ -20,6 +20,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.OptionsItem;
@@ -47,6 +48,7 @@ import mobi.threeam.npang.database.model.PayAttRelation;
 import mobi.threeam.npang.database.model.Payment;
 import mobi.threeam.npang.database.model.PaymentGroup;
 import mobi.threeam.npang.event.CreatePaymentGroupEvent;
+import mobi.threeam.npang.event.OpenDrawerEvent;
 import mobi.threeam.npang.event.PaymentGroupChangedEvent;
 import mobi.threeam.npang.event.SetPaymentGroupEvent;
 import mobi.threeam.npang.ui.adapter.PaymentGroupAdapter;
@@ -84,6 +86,9 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 
 	Fragment fragment;
 
+    @Extra
+    long paymentGroupId = -1;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,7 +97,17 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 		if (fm.findFragmentByTag(FRAG_TAG) == null) {
 
 			FragmentTransaction ft = fm.beginTransaction();
-            PaymentGroup group = paymentGroupDao.queryForAllSorted().get(0);
+            PaymentGroup group = null;
+            if (paymentGroupId != -1) {
+                try {
+                    group = paymentGroupDao.queryForId(paymentGroupId);
+                } catch (SQLException e) {
+                    Logger.e(e);
+                }
+            }
+            if (group == null) {
+                group = paymentGroupDao.queryForAllSorted().get(0);
+            }
             switch (group.state) {
             case PaymentGroup.STATE_NONE:
                 fragment = InputFragment_.builder().paymentGroupId(group.id).build();
@@ -304,6 +319,9 @@ public class MainActivity extends SherlockFragmentActivity implements OnClickLis
 		if (drawerLayout.isDrawerOpen(drawer)) {
 			drawerLayout.closeDrawer(drawer);
 		} else {
+            EventBus.getDefault().post(new OpenDrawerEvent());
+            List<PaymentGroup> paymentGroups = paymentGroupDao.queryForAllSorted();
+            setUpListview(paymentGroups);
 			drawerLayout.openDrawer(drawer);
 		}
 	}

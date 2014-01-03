@@ -10,7 +10,11 @@ public class TimeUtils {
 	public static String buildTitle(Date date) {
 		return titleFormat.format(date);
 	}
-/////
+
+    public static final SimpleDateFormat receiptTitleFormat = new SimpleDateFormat("yyyy년 M월 d일 (E)", Locale.KOREA);
+    public static String buildReceiptTitle(Date date) {
+        return receiptTitleFormat.format(date);
+    }
 
 	public static final String pattern = "yyyy. MM. dd. a h:m";
 	public static final SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.KOREA);

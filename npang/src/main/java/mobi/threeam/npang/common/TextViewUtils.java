@@ -20,10 +20,11 @@ public class TextViewUtils {
 		}
 	}
 
+    public static String receiptTitle(PaymentGroup paymentGroup) {
+        return TextUtils.isEmpty(paymentGroup.title) ? TimeUtils.buildReceiptTitle(paymentGroup.createdAt) : paymentGroup.title;
+    }
+
     public static String title(PaymentGroup paymentGroup) {
-        Logger.i("paymentGroupTt0 " + paymentGroup);
-        Logger.i("paymentGroupTt1 " + paymentGroup.title);
-        Logger.i("paymentGroupTt2 " + paymentGroup.createdAt);
         return TextUtils.isEmpty(paymentGroup.title) ? TimeUtils.buildTitle(paymentGroup.createdAt) : paymentGroup.title;
     }
 

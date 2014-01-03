@@ -28,6 +28,7 @@ import de.greenrobot.event.EventBus;
 import mobi.threeam.npang.R;
 import mobi.threeam.npang.common.Logger;
 import mobi.threeam.npang.common.NPangPreference_;
+import mobi.threeam.npang.common.Notifier;
 import mobi.threeam.npang.database.DBHelper;
 import mobi.threeam.npang.database.dao.AttendeeDao;
 import mobi.threeam.npang.database.dao.ContactsLoader;
@@ -94,6 +95,7 @@ public class AttendeeFragment extends SherlockFragment {
 
 	@AfterViews
 	void afterViews() {
+        getSherlockActivity().getSupportActionBar().setTitle(R.string.attendee);
 		List<Contact> contacts = contactsLoader.getAll();
 
 		contactAdapter.setData(contacts);
@@ -172,6 +174,7 @@ public class AttendeeFragment extends SherlockFragment {
 	
 	void addAttendee(Attendee attendee) {
 		if (attendeeAdapter.contains(attendee.name)) {
+            Notifier.toast(R.string.msg_already_exist_attendee);
 			return;
 		}
 		if (!attendeeMap.containsKey(attendee.name)) {

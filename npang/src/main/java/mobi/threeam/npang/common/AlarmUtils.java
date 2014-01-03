@@ -33,24 +33,27 @@ public class AlarmUtils {
     @OrmLiteDao(helper = DBHelper.class, model = PaymentGroup.class)
     PaymentGroupDao paymentGroupDao;
 
-    PendingIntent buildOperation() {
+    PendingIntent buildOperation(PaymentGroup group) {
         Intent intent = new Intent(context, AlarmReceiver_.class);
+        if (group != null) {
+            intent.putExtra("paymentGroup_id", group.id);
+            intent.putExtra("paymentGroup_title", TextViewUtils.receiptTitle(group));
+        }
         return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
     public void refresh() {
-        alarmManager.cancel(buildOperation());
-
         PaymentGroup group = paymentGroupDao.getNextAlarm();
+        alarmManager.cancel(buildOperation(group));
         if (group != null) {
-            setAlarm(group.getNextAlarmTime());
+            setAlarm(group);
         }
     }
 
 
-    private void setAlarm(Date alarmTime) {
-        Notifier.toast(TimeUtils.format(alarmTime));
-        PendingIntent operation = buildOperation();
+    private void setAlarm(PaymentGroup group) {
+        Date alarmTime = group.getNextAlarmTime();
+        PendingIntent operation = buildOperation(group);
 
         alarmManager.set(AlarmManager.RTC, alarmTime.getTime(), operation);
     }

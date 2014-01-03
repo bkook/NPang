@@ -24,8 +24,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.ShareActionProvider;
-import com.actionbarsherlock.widget.ShareActionProvider.OnShareTargetSelectedListener;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
@@ -41,11 +39,9 @@ import com.googlecode.androidannotations.annotations.res.ColorRes;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.sql.SQLException;
-import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import mobi.threeam.npang.R;
@@ -203,7 +199,7 @@ public class ReceiptFragment extends SherlockFragment {
 	@UiThread
 	void refresh() {
 		if (paymentGroup == null) {
-			Notifier.toast("null");
+			Notifier.toast(R.string.msg_unknown_error);
 			return;
 		}
 
@@ -379,6 +375,7 @@ public class ReceiptFragment extends SherlockFragment {
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(R.string.title_receipt);
 	}
 
 	@OptionsItem(R.id.action_input)
@@ -401,23 +398,23 @@ public class ReceiptFragment extends SherlockFragment {
 		super.onCreateOptionsMenu(menu, inflater);
 	    MenuItem item = menu.findItem(R.id.action_share);
 
-	    Intent intent = buildShareIntent();
-	    ShareActionProvider shareActionProvider = (ShareActionProvider) item.getActionProvider();
-	    shareActionProvider.setShareHistoryFileName(null);
-	    shareActionProvider.setShareIntent(intent);
-	    shareActionProvider.setOnShareTargetSelectedListener(new OnShareTargetSelectedListener() {
-			@Override
-			public boolean onShareTargetSelected(ShareActionProvider source,
-					Intent intent) {
-				startActivity(intent);
-				return true;
-			}
-		});
+//	    Intent intent = buildShareIntent();
+//	    ShareActionProvider shareActionProvider = (ShareActionProvider) item.getActionProvider();
+//	    shareActionProvider.setShareHistoryFileName(null);
+//	    shareActionProvider.setShareIntent(intent);
+//	    shareActionProvider.setOnShareTargetSelectedListener(new OnShareTargetSelectedListener() {
+//			@Override
+//			public boolean onShareTargetSelected(ShareActionProvider source,
+//					Intent intent) {
+//				startActivity(intent);
+//				return true;
+//			}
+//		});
 	}
 
     private String makeReceiptText() {
-        Logger.e("paymentgroup000 " + paymentGroup);
-         StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
+
         builder.append("[").append(TextViewUtils.title(paymentGroup)).append("]").append("\r\n\r\n");
 
         // attendees
@@ -436,7 +433,6 @@ public class ReceiptFragment extends SherlockFragment {
     }
 
     private void fillAttendees(StringBuilder builder) {
-        builder.append(getString(R.string.receipt_format_title, getString(R.string.by_attendee)));
         builder.append(getString(R.string.receipt_format_title, getString(R.string.by_attendee)));
 
         List<Attendee> attendees = null;
@@ -470,8 +466,6 @@ public class ReceiptFragment extends SherlockFragment {
             if (attendee.paidAt != null) {
                 resId = R.string.receipt_format_item_attendee_checked;
             }
-            Logger.i("attendee1 " + attendee.id);
-            Logger.i("attendee2 " + map);
             builder.append(getString(resId, attendee.name, CurrencyUtils.format(map.get(attendee.id))));
             i++;
         }
@@ -495,9 +489,10 @@ public class ReceiptFragment extends SherlockFragment {
             if (!TextUtils.isEmpty(payment.place)) {
                 paymentIndex = paymentIndex + "-" + payment.place;
             }
+            int count = payment.attendees.size();
 
             String paymentItem = getString(R.string.receipt_format_item_payment, paymentIndex,
-                    NumberFormat.getCurrencyInstance(Locale.KOREA).format(payment.amount), payment.attendees.size(), "10");
+                    CurrencyUtils.format(payment.amount), count, CurrencyUtils.format(payment.amount / count));
 
             builder.append(paymentItem);
             index++;
