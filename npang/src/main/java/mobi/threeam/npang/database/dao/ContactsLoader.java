@@ -6,9 +6,10 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.text.TextUtils;
 
-import com.googlecode.androidannotations.annotations.EBean;
-import com.googlecode.androidannotations.annotations.OrmLiteDao;
 import com.j256.ormlite.stmt.QueryBuilder;
+
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.OrmLiteDao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

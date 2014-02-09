@@ -7,9 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EReceiver;
-import com.googlecode.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EReceiver;
+import org.androidannotations.annotations.SystemService;
 
 import mobi.threeam.npang.R;
 import mobi.threeam.npang.common.AlarmUtils;

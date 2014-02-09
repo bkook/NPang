@@ -6,9 +6,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.googlecode.androidannotations.annotations.EViewGroup;
-import com.googlecode.androidannotations.annotations.OrmLiteDao;
-import com.googlecode.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.annotations.OrmLiteDao;
+import org.androidannotations.annotations.ViewById;
 
 import mobi.threeam.npang.R;
 import mobi.threeam.npang.common.TextViewUtils;

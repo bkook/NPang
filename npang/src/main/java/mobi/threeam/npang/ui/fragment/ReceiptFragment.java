@@ -25,19 +25,19 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.EFragment;
-import com.googlecode.androidannotations.annotations.FragmentArg;
-import com.googlecode.androidannotations.annotations.OptionsItem;
-import com.googlecode.androidannotations.annotations.OptionsMenu;
-import com.googlecode.androidannotations.annotations.OrmLiteDao;
-import com.googlecode.androidannotations.annotations.SystemService;
-import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.annotations.res.ColorRes;
-import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.OrmLiteDao;
+import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.ColorRes;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -130,8 +130,9 @@ public class ReceiptFragment extends Fragment {
 	@FragmentArg
 	long paymentGroupId;
 
-	PaymentGroup paymentGroup;
+    ShareActionProvider shareActionProvider;
 
+	PaymentGroup paymentGroup;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -159,9 +160,11 @@ public class ReceiptFragment extends Fragment {
 		super.onCreateOptionsMenu(menu, inflater);
 	    MenuItem item = menu.findItem(R.id.action_share);
 
-        final Intent intent = buildShareIntent();
-	    ShareActionProvider shareActionProvider = (ShareActionProvider) item.getActionProvider();
-	    shareActionProvider.setShareIntent(intent);
+	    shareActionProvider = (ShareActionProvider) item.getActionProvider();
+        if (paymentGroup != null) {
+            Intent intent = buildShareIntent();
+            shareActionProvider.setShareIntent(intent);
+        }
 	}
 
     @Override
@@ -225,11 +228,13 @@ public class ReceiptFragment extends Fragment {
 		setUpBankAccount();
 		setUpPayments();
         setUpAlarm();
+        setUpShareIntent();
 
 		if (paymentGroup.payments == null) {
 			paymentViewList.removeAllViews();
 			return;
 		}
+
 	}
 
 	void setUpTitle() {
@@ -275,6 +280,12 @@ public class ReceiptFragment extends Fragment {
                 setAlarmAreaEnabled(isChecked);
             }
         });
+    }
+
+    void setUpShareIntent() {
+        if (shareActionProvider != null && paymentGroup != null) {
+            shareActionProvider.setShareIntent(buildShareIntent());
+        }
     }
 
     void setAlarmAreaEnabled(boolean enabled) {

@@ -1,21 +1,21 @@
 package mobi.threeam.npang.ui.adapter;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import mobi.threeam.npang.common.AnimUtils;
-import mobi.threeam.npang.common.Logger;
-import mobi.threeam.npang.database.model.Attendee;
-import mobi.threeam.npang.ui.view.AttendeeItemView;
-import mobi.threeam.npang.ui.view.AttendeeItemView_;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.googlecode.androidannotations.annotations.AfterInject;
-import com.googlecode.androidannotations.annotations.EBean;
-import com.googlecode.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import mobi.threeam.npang.common.AnimUtils;
+import mobi.threeam.npang.database.model.Attendee;
+import mobi.threeam.npang.ui.view.AttendeeItemView;
+import mobi.threeam.npang.ui.view.AttendeeItemView_;
 
 @EBean
 public class AttendeeAdapter extends BaseAdapter {

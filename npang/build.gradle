@@ -13,7 +13,7 @@ repositories {
 }
 
 
-ext.androidAnnotationsVersion = '2.7.1';
+ext.androidAnnotationsVersion = '3.0.1'
 
 configurations {
     apt
@@ -30,8 +30,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 4
+        versionName "1.0.3"
     }
     buildTypes {
         release {
@@ -71,8 +71,10 @@ android {
 }
 
 dependencies {
-    apt "com.googlecode.androidannotations:androidannotations:${androidAnnotationsVersion}"
-    compile "com.googlecode.androidannotations:androidannotations-api:${androidAnnotationsVersion}"
+    apt "org.androidannotations:androidannotations:${androidAnnotationsVersion}"
+    compile "org.androidannotations:androidannotations-api:${androidAnnotationsVersion}"
+
+    //compile "com.googlecode.androidannotations:androidannotations-api:${androidAnnotationsVersion}"
 
     compile 'com.android.support:support-v4:19.0.0'
     compile 'ch.acra:acra:4.5.0'

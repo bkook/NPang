@@ -5,10 +5,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.googlecode.androidannotations.annotations.EBean;
-import com.googlecode.androidannotations.annotations.OrmLiteDao;
-import com.googlecode.androidannotations.annotations.RootContext;
-import com.googlecode.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.OrmLiteDao;
+import org.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.SystemService;
 
 import java.util.Date;
 

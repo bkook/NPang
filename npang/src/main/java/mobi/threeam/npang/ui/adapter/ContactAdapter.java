@@ -7,9 +7,9 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import com.googlecode.androidannotations.annotations.AfterInject;
-import com.googlecode.androidannotations.annotations.EBean;
-import com.googlecode.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -109,7 +109,9 @@ public class ContactAdapter extends BaseAdapter implements Filterable {
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults results) {
             data.clear();
-            data.addAll((Collection<Contact>) results.values);
+            if (results != null && results.values != null) {
+                data.addAll((Collection<Contact>) results.values);
+            }
             notifyDataSetChanged();
         }
     }

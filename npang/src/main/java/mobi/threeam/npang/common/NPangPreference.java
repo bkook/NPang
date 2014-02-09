@@ -1,10 +1,9 @@
 package mobi.threeam.npang.common;
 
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultString;
-import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
-import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
+import org.androidannotations.annotations.sharedpreferences.DefaultString;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
-@SharedPref(value=Scope.APPLICATION_DEFAULT)
+@SharedPref(value=SharedPref.Scope.APPLICATION_DEFAULT)
 public interface NPangPreference {
 	
 	@DefaultString("")

@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EReceiver;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EReceiver;
 
 import mobi.threeam.npang.common.AlarmUtils;
 
