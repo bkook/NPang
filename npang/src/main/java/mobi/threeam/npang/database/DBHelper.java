@@ -1,20 +1,20 @@
 package mobi.threeam.npang.database;
 
-import mobi.threeam.npang.common.Logger;
-import mobi.threeam.npang.database.dao.PaymentDao;
-import mobi.threeam.npang.database.dao.PaymentGroupDao;
-import mobi.threeam.npang.database.model.PayAttRelation;
-import mobi.threeam.npang.database.model.Attendee;
-import mobi.threeam.npang.database.model.Payment;
-import mobi.threeam.npang.database.model.PaymentGroup;
+
 import android.content.Context;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+
+import mobi.threeam.npang.common.Logger;
+import mobi.threeam.npang.database.dao.PaymentDao;
+import mobi.threeam.npang.database.dao.PaymentGroupDao;
+import mobi.threeam.npang.database.model.Attendee;
+import mobi.threeam.npang.database.model.PayAttRelation;
+import mobi.threeam.npang.database.model.Payment;
+import mobi.threeam.npang.database.model.PaymentGroup;
 
 public class DBHelper extends OrmLiteSqliteOpenHelper {
 
